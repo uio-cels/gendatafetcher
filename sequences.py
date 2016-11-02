@@ -1,8 +1,7 @@
 """
 Simple methods for accessing the Togows API (http://togows.org/)
 """
-import urllib2
-from config import *
+import urllib.request as urllib2
 
 def get_sequence(loci_id, start=1, end=0):
     """
@@ -28,22 +27,14 @@ def save_sequence_to_fasta(loci_id, start, end, file_name = ""):
     start += 1
     end += 1
 
-    # Save url so that it can be presented later
-    url = "http://togows.org/api/ucsc/hg38/%s:%d-%d.fasta" % (loci_id, start, end)
-    import globals
-    if "alt" in loci_id:
-        globals.togows_alt_url = url
-    else:
-        globals.togows_main_url = url
-
     if file_name == "":
         file_name = DATA_PATH + "%s:%d-%d.fasta" % (loci_id, start, end)
 
 
-    if DEBUG: print "=============== FETCHING SEQUENCE =============="
+    #if DEBUG: print "=============== FETCHING SEQUENCE =============="
     import os.path
     if os.path.isfile(file_name):
-        if DEBUG: print "File %s is chaced" % file_name
+        #if DEBUG: print "File %s is chaced" % file_name
         return file_name
 
 #    if DEBUG: print "###########"
@@ -52,7 +43,7 @@ def save_sequence_to_fasta(loci_id, start, end, file_name = ""):
 #    if DEBUG: print "---------------"
 
     curpath = os.path.abspath(os.curdir)
-    if DEBUG: print curpath
+    #if DEBUG: print curpath
     f = open(file_name, "w")
     f.write(get_sequence(loci_id, start, end))
     return file_name
