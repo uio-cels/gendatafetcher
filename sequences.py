@@ -9,8 +9,12 @@ def get_sequence(loci_id, start=1, end=0):
     of an alternative loci (e.g. chr1 or chr1_GL383519v1_alt)
     """
     url = "http://togows.org/api/ucsc/hg38/%s:%d-%d.fasta" % (loci_id, start, end)
-    # if DEBUG: print "Fetching sequence from " + url
+    print("Fetching sequence from " + url)
     sequence = urllib2.urlopen(url).read()
+
+    # Remove line breaks
+    sequence = sequence.replace('\n', '')
+
     return sequence
 
 
