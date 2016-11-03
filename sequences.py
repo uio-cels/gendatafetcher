@@ -13,7 +13,7 @@ def get_sequence(loci_id, start=1, end=0):
     sequence = urllib2.urlopen(url).read()
 
     # Remove line breaks
-    sequence = sequence.replace('\n', '')
+    sequence = sequence.decode('utf8').replace('\n', '')
 
     return sequence
 
