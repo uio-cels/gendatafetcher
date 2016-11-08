@@ -13,8 +13,8 @@ def parse_ucsc_xml(text):
     return seq
 
 
-def get_sequence(loci_id, start=1, end=0):
-    return get_sequence_ucsc(loci_id, start, end)
+def get_sequence(loci_id, start=1, end=0, caching = True):
+    return get_sequence_ucsc(loci_id, start, end, caching)
     """
     Gets the sequence (as fasta format)
     of an alternative loci (e.g. chr1 or chr1_GL383519v1_alt)
@@ -34,11 +34,28 @@ def get_sequence(loci_id, start=1, end=0):
     return sequence
 
 
-def get_sequence_ucsc(loci_id, start=1, end=0):
+def get_sequence_ucsc(loci_id, start=1, end=0, caching=True):
+
+    file_name = "data/tmp/sequence_%s_%s_%s.fasta" % (loci_id, start, end)
+
+    if caching:
+        import os
+        assert os.path.isdir("data/tmp"), "data/tmp folder must exist"
+        if os.path.isfile(file_name):
+            f = open(file_name)
+            seq = f.read()
+            f.close()
+            return seq
+
     url = "http://genome.ucsc.edu/cgi-bin/das/hg38/dna?segment=%s:%d,%d" % (loci_id, start, end)
     data = urllib2.urlopen(url).read()
 
     sequence = parse_ucsc_xml(data)
+
+    if caching:
+        f = open(file_name, "w")
+        f.write(sequence)
+        f.close()
 
     return sequence
 
