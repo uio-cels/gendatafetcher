@@ -4,6 +4,7 @@ Simple methods for accessing the Togows API (http://togows.org/)
 import urllib.request as urllib2
 
 def get_sequence(loci_id, start=1, end=0):
+    return get_sequence_ucsc(loci_id, start, end)
     """
     Gets the sequence (as fasta format)
     of an alternative loci (e.g. chr1 or chr1_GL383519v1_alt)
@@ -13,6 +14,16 @@ def get_sequence(loci_id, start=1, end=0):
     sequence = urllib2.urlopen(url).read()
 
     # Remove line breaks
+    sequence = sequence.decode('utf8').replace('\n', '')
+
+    return sequence
+
+
+def get_sequence_ucsc(loci_id, start=1, end=0):
+    url = "http://genome.ucsc.edu/cgi-bin/das/hg38/dna?segment=%s:%d,%d" % (loci_id, start, end)
+    data = urllib2.urlopen(url).read()
+
+    sequence = xmlparse(data)
     sequence = sequence.decode('utf8').replace('\n', '')
 
     return sequence
