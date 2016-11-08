@@ -23,8 +23,8 @@ def get_sequence_ucsc(loci_id, start=1, end=0):
     url = "http://genome.ucsc.edu/cgi-bin/das/hg38/dna?segment=%s:%d,%d" % (loci_id, start, end)
     data = urllib2.urlopen(url).read()
 
-    sequence = xmlparse(data)
-    sequence = sequence.decode('utf8').replace('\n', '')
+    sequence = parseucscxml(data)
+    #sequence = sequence.decode('utf8').replace('\n', '')
 
     return sequence
 
