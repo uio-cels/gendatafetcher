@@ -13,7 +13,7 @@ def parse_ucsc_xml(text):
     return seq
 
 
-def get_sequence(loci_id, start=1, end=0, caching = True):
+def get_sequence(loci_id, start=1, end=0, caching=True):
     return get_sequence_ucsc(loci_id, start, end, caching)
     """
     Gets the sequence (as fasta format)
@@ -49,8 +49,11 @@ def get_sequence_ucsc(loci_id, start=1, end=0, caching=True):
 
     url = "http://genome.ucsc.edu/cgi-bin/das/hg38/dna?segment=%s:%d,%d" % (loci_id, start, end)
     data = urllib2.urlopen(url).read()
-
-    sequence = parse_ucsc_xml(data)
+    try:
+        sequence = parse_ucsc_xml(data)
+    except:
+        print(url)
+        raise
 
     if caching:
         f = open(file_name, "w")
