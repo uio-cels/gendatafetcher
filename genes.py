@@ -11,7 +11,7 @@ def genes_crossing_position(chrom_id, position):
     """
     query = r"SELECT k.*, r.geneSymbol as gname FROM knownGene k, kgXref r where r.kgID = k.name AND k.chrom LIKE '%s' and k.txStart < %d and k.txEnd > %d" % (chrom_id, position, position)
     res = db.fetch_all(query)
-    return res
+    return _genes_to_dict(res)
 
 def get_alt_genes():
     """
@@ -23,7 +23,7 @@ def get_alt_genes():
     query = r'SELECT g.*, k.geneSymbol FROM knownGene g, kgXref k where k.kgID=g.name AND g.chrom like "%alt%"'
     res = db.fetch_all(query)
     return _genes_to_dict(res)
-    return res
+
 
 def get_main_genes():
     """
@@ -34,7 +34,7 @@ def get_main_genes():
     """
     query = r'SELECT g.*, k.geneSymbol FROM knownGene g, kgXref k where k.kgID=g.name AND g.chrom not like "%\_%"'
     res = db.fetch_all(query)
-    return res
+    return _genes_to_dict(res)
 
 def get_gene(gene_id):
     """
