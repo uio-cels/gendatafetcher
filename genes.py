@@ -2,6 +2,7 @@ from ucscdb import DbWrapper
 
 db = DbWrapper()
 
+
 def genes_crossing_position(chrom_id, position):
     """
     Returns all genes starting before and ending after the given position
@@ -12,6 +13,7 @@ def genes_crossing_position(chrom_id, position):
     query = r"SELECT k.*, r.geneSymbol as gname FROM knownGene k, kgXref r where r.kgID = k.name AND k.chrom LIKE '%s' and k.txStart < %d and k.txEnd > %d" % (chrom_id, position, position)
     res = db.fetch_all(query)
     return _genes_to_dict(res)
+
 
 def get_alt_genes():
     """
@@ -36,15 +38,18 @@ def get_main_genes():
     res = db.fetch_all(query)
     return _genes_to_dict(res)
 
+
 def get_gene(gene_id):
     """
     :param self:
     :param gene_id: The ucsc gene id (NOT gene symbol)
     :return: Returns a dict with the gene information
     """
-    query = r"SELECT g.*, k.geneSymbol FROM knownGene g, kgXref k where k.kgID=g.name AND name='%s'" % gene_id
+    query = r"""SELECT g.*, k.geneSymbol FROM knownGene g, kgXref k
+                where k.kgID=g.name AND name='%s'""" % gene_id
     res = db.fetch_all(query)
     return _genes_to_dict(res)[0]
+
 
 def _genes_to_dict(genes):
     """
@@ -54,15 +59,17 @@ def _genes_to_dict(genes):
     out = []
     for gene in genes:
 
-        gene["exonStarts"] = [int(p) for p in gene["exonStarts"].decode('utf8').split(",")[:-1]]  # remove last, which always is empty
-        gene["exonEnds"] = [int(p) for p in gene["exonEnds"].decode('utf8').split(",")[:-1]]  # remove last, which always is empty
+        gene["exonStarts"] = [int(p) for p in
+                gene["exonStarts"].decode('utf8').split(",")[:-1]]  # remove last, which always is empty
+        gene["exonEnds"] = [int(p) for p in
+                gene["exonEnds"].decode('utf8').split(",")[:-1]]  # remove last, which always is empty
         out.append(gene)
 
     return out
 
 
 if __name__ == "__main__":
-    gene = get_gene("uc011jmc.2")
-    #genes = get_alt_genes()
-    print(gene)
+    #gene = get_gene("uc011jmc.2")
+    genes = get_alt_genes()
+    print(genes)
 
