@@ -1,4 +1,4 @@
-from ucscdb import DbWrapper
+from .ucscdb import DbWrapper
 
 db = DbWrapper()
 
