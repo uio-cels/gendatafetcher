@@ -22,6 +22,7 @@ def get_alt_genes():
     """
     query = r'SELECT g.*, k.geneSymbol FROM knownGene g, kgXref k where k.kgID=g.name AND g.chrom like "%alt%"'
     res = db.fetch_all(query)
+    return _genes_to_dict(res)
     return res
 
 def get_main_genes():
@@ -41,9 +42,9 @@ def get_gene(gene_id):
     :param gene_id: The ucsc gene id (NOT gene symbol)
     :return: Returns a dict with the gene information
     """
-    query = r"SELECT g.*, k.geneSymbol FROM knownGene g, kgXref k where k.kgID=g.name AND name='%s'"
+    query = r"SELECT g.*, k.geneSymbol FROM knownGene g, kgXref k where k.kgID=g.name AND name='%s'" % gene_id
     res = db.fetch_all(query)
-    return _genes_to_dict([res])[0]
+    return _genes_to_dict(res)[0]
 
 def _genes_to_dict(genes):
     """
@@ -52,8 +53,9 @@ def _genes_to_dict(genes):
     """
     out = []
     for gene in genes:
-        gene["exonStarts"] = gene["exonStarts"].split(",")[-1]  # remove last, which always is empty
-        gene["exonEnds"] = gene["exonEnds"].split(",")[-1]  # remove last, which always is empty
+
+        gene["exonStarts"] = [int(p) for p in gene["exonStarts"].decode('utf8').split(",")[:-1]]  # remove last, which always is empty
+        gene["exonEnds"] = [int(p) for p in gene["exonEnds"].decode('utf8').split(",")[:-1]]  # remove last, which always is empty
         out.append(gene)
 
     return out
@@ -61,5 +63,6 @@ def _genes_to_dict(genes):
 
 if __name__ == "__main__":
     gene = get_gene("uc011jmc.2")
+    #genes = get_alt_genes()
     print(gene)
 
