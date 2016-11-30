@@ -66,6 +66,9 @@ def _genes_to_dict(genes):
 
     return out
 
+def test():
+    print("Test")
+
 
 if __name__ == "__main__":
     #gene = get_gene("uc011jmc.2")
