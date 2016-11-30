@@ -148,10 +148,19 @@ class DbWrapper(object):
         return res[0]
 
     def get_chrom_lengths(self):
-        # Gets all chromosome lengths
-        res = self.fetch_all("SELECT chrom, size FROM chromInfo")
-        for r in res:
-            self.chrom_lengths[r["chrom"]] = r["size"]
+        """
+        :return: The length of all chromosomes
+        """
+
+        if len(self.chrom_lengths) > 0:
+            return self.chrom_lengths
+        else:
+            res = self.fetch_all("SELECT chrom, size FROM chromInfo")
+            for r in res:
+                self.chrom_lengths[r["chrom"]] = r["size"]
+
+        return self.chrom_lengths
+
 
     def chrom_length(self, chromosome_id):
         if chromosome_id in self.chrom_lengths:
