@@ -44,6 +44,7 @@ class DbWrapper(object):
 
 
         # Create a mapper from alt loci ID to new alt loci id
+        self.alt_loci_names = {}
         #self._create_loci_id_mapper()
 
     def _create_loci_id_mapper(self):
@@ -60,7 +61,8 @@ class DbWrapper(object):
                 self.alt_loci_names[id] = d[0] + "." + d[-1][-1:]
 
     def alt_loci_pretty_name(self, name):
-        if name in self.alt_loci_names:
+
+        if name in self.alt_loci_names.keys():
             return self.alt_loci_names[name]
         else:
             return name
@@ -158,7 +160,7 @@ class DbWrapper(object):
             self.get_chrom_lengths()
             return self.chrom_lengths[chromosome_id]
 
-    def alt_loci_names(self):
+    def get_alt_loci_names(self):
         res = self.fetch_all(
             r"SELECT chrom FROM altLocations where chrom LIKE '%\_%'")
         return [r["chrom"] for r in res]

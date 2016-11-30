@@ -41,7 +41,6 @@ def get_main_genes():
 
 def get_gene(gene_id):
     """
-    :param self:
     :param gene_id: The ucsc gene id (NOT gene symbol)
     :return: Returns a dict with the gene information
     """
